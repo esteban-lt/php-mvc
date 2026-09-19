@@ -11,15 +11,14 @@ class ProductController
     public function index()
     {
         $products = $this->product->all();
-        View::render('products/index', ['products' => $this->product->all()]);
+        View::render('products/index', ['products' => $products]);
     }
 
     public function create()
     {
         $product = ['name' => '', 'price' => ''];
-        $error = '';
         View::render('products/create', [
-            'product' => ['name' => '', 'price' => ''],
+            'product' => $product,
             'error'   => '',
         ]);
     }
@@ -32,7 +31,6 @@ class ProductController
         ];
 
         if ($product['name'] === '' || mb_strlen($product['name']) > 100 || !is_numeric($product['price']) || $product['price'] <= 0 || $product['price'] > 99999999.99) {
-            $error = 'Escribe un nombre y un precio mayor que 0.';
             View::render('products/create', [
                 'product' => $product,
                 'error'   => 'Escribe un nombre y un precio mayor que 0.',
@@ -48,7 +46,6 @@ class ProductController
     public function edit()
     {
         $product = $this->product->find((int) ($_GET['id'] ?? 0));
-        $error = '';
 
         if (!$product) {
             http_response_code(404);
@@ -68,7 +65,6 @@ class ProductController
         ];
 
         if ($product['name'] === '' || mb_strlen($product['name']) > 100 || !is_numeric($product['price']) || $product['price'] <= 0 || $product['price'] > 99999999.99) {
-            $error = 'Escribe un nombre y un precio mayor que 0.';
             View::render('products/edit', [
                 'product' => $product,
                 'error'   => 'Escribe un nombre y un precio mayor que 0.',
